@@ -1,0 +1,6 @@
+@PCDevicesShop.API_HostAddress = http://localhost:5278
+
+GET {{PCDevicesShop.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

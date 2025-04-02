@@ -1,0 +1,30 @@
+name: pc-devices-shop
+services:
+  pcdevicesshop.api:
+    image: ${DOCKER_REGISTRY-}pcdevicesshopapi
+    build:
+      context: .
+      dockerfile: PCDevicesShop.API/Dockerfile
+    environment:
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DockerComposeContext=Host=postgresdb;Port=5432;Database=pcdb;Username=pc_user;Password=pc_password 
+    volumes:
+      - ./EventsAPI/wwwroot/images:/app/wwwroot/images
+    depends_on:
+      - postgresdb
+    ports:
+      - 8080:8080
+  postgresdb:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: pc_user
+      POSTGRES_PASSWORD: pc_password
+      POSTGRES_DB: pcdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+volumes:
+  postgres_data:
