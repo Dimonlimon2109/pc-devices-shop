@@ -50,7 +50,7 @@ namespace PCDevicesShop.API.Middlewares
             catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                await HandleExceptionAsync(context, "Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.");
+                await HandleExceptionAsync(context, ex.Message);
             }
         }
 

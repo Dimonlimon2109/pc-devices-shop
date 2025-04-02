@@ -9,9 +9,8 @@ services:
       - ASPNETCORE_HTTPS_PORTS=8081
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DockerComposeContext=Host=postgresdb;Port=5432;Database=pcdb;Username=pc_user;Password=pc_password 
     volumes:
-      - ./EventsAPI/wwwroot/images:/app/wwwroot/images
+      - ./PCDevicesShop.API/wwwroot/images:/app/wwwroot/images
     depends_on:
       - postgresdb
     ports:

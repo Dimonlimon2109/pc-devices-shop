@@ -12,7 +12,7 @@ namespace PCDevicesShop.DAL.Data
             builder.HasData(
                 new User
                 {
-                    Id = new Guid(),
+                    Id = Guid.NewGuid(),
                     UserName = "admin",
                     Email = "admin@example.com",
                     Role = "Admin",

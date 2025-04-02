@@ -7,6 +7,7 @@ namespace PCDevicesShop.DAL.Data
     {
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options): base(options) {
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         public DbSet<User> Users { get; set; }
@@ -15,6 +16,8 @@ namespace PCDevicesShop.DAL.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+
+            modelBuilder.ApplyConfiguration(new UserSeedConfiguration());
         }
 
     }
