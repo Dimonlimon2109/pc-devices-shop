@@ -11,6 +11,9 @@ using FluentValidation.AspNetCore;
 using PCDevicesShop.BLL.DTO;
 using PCDevicesShop.BLL.Validators;
 using PCDevicesShop.API.Middlewares;
+using Microsoft.OpenApi.Models;
+using PCDevicesShop.BLL.Interfaces;
+using PCDevicesShop.API.Adapters;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -20,7 +23,33 @@ var configuration = builder.Configuration;
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "PCDevicesShop API", Version = "v1" });
+
+    // Добавляем поддержку JWT в Swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddDbContext<ApplicationContext>(
     options =>
@@ -39,11 +68,19 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PasswordService>();
+builder.Services.AddScoped<DeviceService>();
+builder.Services.AddScoped<ImageService>();
+
+builder.Services.AddSingleton<IImagePath, WebHostEnvironmentAdapter>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<RegisterDTO>, RegisterDTOValidator>();
 builder.Services.AddScoped<IValidator<LoginDTO>, LoginDTOValidator>();
+builder.Services.AddScoped<IValidator<CreateDeviceDTO>, CreateDeviceDTOValidator>();
+builder.Services.AddScoped<IValidator<UpdateDeviceDTO>, UpdateDeviceDTOValidator>();
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -52,7 +89,7 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -78,9 +115,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles();
+
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

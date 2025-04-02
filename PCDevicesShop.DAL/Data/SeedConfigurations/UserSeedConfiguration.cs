@@ -3,7 +3,7 @@ using PCDevicesShop.DAL.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
-namespace PCDevicesShop.DAL.Data
+namespace PCDevicesShop.DAL.Data.SeedConfigurations
 {
     public class UserSeedConfiguration : IEntityTypeConfiguration<User>
     {

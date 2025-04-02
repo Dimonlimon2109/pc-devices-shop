@@ -2,7 +2,7 @@
 using PCDevicesShop.DAL.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace PCDevicesShop.DAL.Data
+namespace PCDevicesShop.DAL.Data.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
@@ -21,7 +21,7 @@ namespace PCDevicesShop.DAL.Data
                 .IsUnique();
             builder.Property(u => u.Role)
                 .IsRequired();
-            builder.Property(u=> u.PasswordHash)
+            builder.Property(u => u.PasswordHash)
                 .IsRequired()
                 .HasMaxLength(256);
         }
