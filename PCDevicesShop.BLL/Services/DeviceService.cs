@@ -3,6 +3,7 @@
 using AutoMapper;
 using FluentValidation;
 using PCDevicesShop.BLL.DTO;
+using PCDevicesShop.BLL.Models;
 using PCDevicesShop.DAL.Entities;
 using PCDevicesShop.DAL.Interfaces;
 
@@ -14,6 +15,7 @@ namespace PCDevicesShop.BLL.Services
         private readonly IMapper _mapper;
         private readonly IValidator<CreateDeviceDTO> _creatingDeviceValidator;
         private readonly IValidator<UpdateDeviceDTO> _updateDeviceValidator;
+        private readonly IValidator<FilterDeviceModel> _filterValidator;
         private readonly ImageService _imageService;
 
         public DeviceService(
@@ -21,12 +23,14 @@ namespace PCDevicesShop.BLL.Services
             IMapper mapper,
             IValidator<CreateDeviceDTO> creatingDeviceValidator,
             IValidator<UpdateDeviceDTO> updateDeviceValidator,
+            IValidator<FilterDeviceModel> filterValidator,
             ImageService imageService)
         {
             _deviceRepository = deviceRepository;
             _mapper = mapper;
             _creatingDeviceValidator = creatingDeviceValidator;
             _updateDeviceValidator = updateDeviceValidator;
+            _filterValidator = filterValidator;
             _imageService = imageService;
         }
 
@@ -54,6 +58,19 @@ namespace PCDevicesShop.BLL.Services
             return devices.Select(_mapper.Map<DeviceDTO>);
         }
 
+        public async Task<IEnumerable<DeviceDTO>> GetDevicesWithFiltersAsync(FilterDeviceModel filters, CancellationToken ct = default)
+        {
+            _filterValidator.ValidateAndThrow(filters);
+            var filteringDevices = await _deviceRepository.GetDevicesWithFiltersAsync(
+                filters.Page,
+                filters.PageSize,
+                filters.Name,
+                filters.Category,
+                filters.StartPrice,
+                filters.EndPrice,
+                ct);
+            return filteringDevices.Select(_mapper.Map<DeviceDTO>);
+        }
         public async Task<DeviceDTO> GetDeviceByIdAsync(Guid id, CancellationToken ct = default)
         {
             var device = await _deviceRepository.GetByIdAsync(id, ct);

@@ -9,6 +9,5 @@ namespace PCDevicesShop.API.Models
         double Price, 
         int StockQuantity,
         string Description,
-        IFormFile? Image
-        );
+        IFormFile? Image);
 }

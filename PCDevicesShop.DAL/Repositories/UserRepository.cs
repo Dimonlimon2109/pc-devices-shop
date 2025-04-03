@@ -12,7 +12,7 @@ namespace PCDevicesShop.DAL.Repositories
 
         public async Task<User?> GetByUserNameAsync(string userName, CancellationToken ct = default)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.UserName == userName, ct);
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(u => u.UserName == userName, ct);
         }
     }
 }

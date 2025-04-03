@@ -14,6 +14,7 @@ using PCDevicesShop.API.Middlewares;
 using Microsoft.OpenApi.Models;
 using PCDevicesShop.BLL.Interfaces;
 using PCDevicesShop.API.Adapters;
+using PCDevicesShop.BLL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -80,6 +81,7 @@ builder.Services.AddScoped<IValidator<RegisterDTO>, RegisterDTOValidator>();
 builder.Services.AddScoped<IValidator<LoginDTO>, LoginDTOValidator>();
 builder.Services.AddScoped<IValidator<CreateDeviceDTO>, CreateDeviceDTOValidator>();
 builder.Services.AddScoped<IValidator<UpdateDeviceDTO>, UpdateDeviceDTOValidator>();
+builder.Services.AddScoped<IValidator<FilterDeviceModel>, FilterDeviceModelValidator>();
 
 
 builder.Services.AddAuthentication(options =>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PCDevicesShop.API.Models;
 using PCDevicesShop.API.ViewModels;
 using PCDevicesShop.BLL.DTO;
+using PCDevicesShop.BLL.Models;
 using PCDevicesShop.BLL.Services;
 
 namespace PCDevicesShop.API.Controllers
@@ -40,11 +41,19 @@ namespace PCDevicesShop.API.Controllers
             return Ok(deviceViewModel);
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllDevices(Guid id, CancellationToken ct = default)
+        //{
+        //    var devicesDTO = await _deviceService.GetAllDevicesAsync(ct);
+        //    var devicesViewModel = devicesDTO?.Select(_mapper.Map<DeviceDTO>);
+        //    return Ok(devicesViewModel);
+        //}
+
         [HttpGet]
-        public async Task<IActionResult> GetAllDevices(Guid id, CancellationToken ct = default)
+        public async Task<IActionResult> GetFilteredDevices([FromQuery]FilterDeviceModel filter, CancellationToken ct = default)
         {
-            var devicesDTO = await _deviceService.GetAllDevicesAsync(ct);
-            var devicesViewModel = devicesDTO.Select(_mapper.Map<DeviceDTO>);
+            var devicesDTO = await _deviceService.GetDevicesWithFiltersAsync(filter, ct);
+            var devicesViewModel = devicesDTO?.Select(_mapper.Map<DeviceDTO>);
             return Ok(devicesViewModel);
         }
 
