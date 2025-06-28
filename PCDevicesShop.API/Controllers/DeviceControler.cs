@@ -24,7 +24,7 @@ namespace PCDevicesShop.API.Controllers
 
         //[Authorize(Policy = "AdminPolicy")]
         [HttpPost]
-        public async Task<IActionResult> CreateEvent([FromForm] CreateDeviceModel creatingDevice, CancellationToken ct = default)
+        public async Task<IActionResult> CreateDevice([FromForm] CreateDeviceModel creatingDevice, CancellationToken ct = default)
         {
             var createDeviceDTO = _mapper.Map<CreateDeviceDTO>(creatingDevice);
             var deviceDTO = await _deviceService.CreateDeviceAsync(createDeviceDTO, ct);
